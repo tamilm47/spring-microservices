@@ -1,0 +1,72 @@
+PART - 1 (Limits service and spring cloud config with git interaction)
+-----------------------------
+1.Create limit service (with config client dependency) - spring-cloud-starter-config
+once we added need to add spring.config.import in app.properties. 119-5.09
+
+2.create configuration class(with @ConfigurationProperties) to fetch values from app.properties. 122-2.49
+
+3.Next connect spring-cloud-config-server with git and then connect limits-service to spring-cloud-config-server.123 to 127
+	a).create spring cloud config server(with config server dependency) - 123-1.20
+	b).add limits-service(app name.properties) to spring-cloud-config-server and commit the file. 124
+	c).connect spring-cloud-config-server to local git first - adding folder path in app.pro of spring-cloud-config-server. 126-1.01
+	d).next connect our limits-service to spring-cloud-config-server - for this just add app name as 'limits-server' in app.pro . 127-1.49
+4. create propeies file for diff env and run env name in uri. 128-0.49
+<------------------------------------------------------------------------------------------------------------------------------------------->
+PART - 2 (setting up currency and exchange ms's and invoking using RestClient)
+-----------------------------
+1. create currency-exchange and currency conversion ms with config client dependecny
+2. duplicate currency-exchange app and set name ended with differen ports(instances) to return env name in response(so can know that which env returning response)
+	ex - app_name8080
+3. setup JPA(convert normal bean to Entity class) and setup H2 database with appropriate config in app.properties. now return currency-exchange data from DB
+4. Same like setup currency-conversion ms
+5. Invoke currency-exchange from currency-conversion service using RestTemplate class.
+<------------------------------------------------------------------------------------------------------------------------------------------->
+PART - 3 (Feign rest client)
+-----------------------------
+1. Invoke currency-exchange from currency-conversion service using Feign client.
+	a). add 'spring-cloud-starter-openfeign' dependency in currecy-conversion
+	b). add @EnableFeignClients in main application.java . 142-3.03
+	c). create proxy interface and add @FeignClient with name of app and url. 142-4.56
+<------------------------------------------------------------------------------------------------------------------------------------------->
+PART - 4 (Eureka naming server/ service registry)
+-----------------------------
+1. Using feign client the url is hard coded in annotation. so setup naming server and register all ms into that so that it ll pickup available instance from them.
+	a). new project with Eurea-server dependency. 143- 3.26
+	b). add @EnableEurekaServer in main app.java 143- 4.53
+	c) add two configs in app.properties to setup do not regsiter own ms in eureka - 143.6.34
+	d) now connect conversion ms with exchange ms by adding netflix-eureka-client dependency 
+<------------------------------------------------------------------------------------------------------------------------------------------->
+PART - 5 ( Load Balancer)
+-----------------------------
+1. Load Balancing - spring-cloud-starter-loadbalancer instead of Ribbon.
+	a).now can remove the url from feignclient annotation in proxy and can run conversion ms.
+<------------------------------------------------------------------------------------------------------------------------------------------->
+PART - 5 (API Gateway)
+-----------------------------
+1. API Gateway (to impl some common functions ) - old version uses Zuul gateway.
+	a).create new project for api gateway with gateway dependency - 148. 2.13
+	b). add discovery.client.enabled property in app.pro - so can able to run application with url of app name which is displayed in eureka dashboard
+	c). can change uppercase name in using app.prop
+	d). create config class and using RouteLocator can change/add with url. (can add param , header and can rewrite uri)
+<------------------------------------------------------------------------------------------------------------------------------------------->
+PART - 6 (Fault Tolerence)
+-----------------------------
+1. Now handle fault tolerence.(resilience4j is new one- used Hystrix for old version of spring boot)
+   Must Read . 154- 2.18
+	a). add resilence4j-spring-boot2 dependency in exchange ms.
+	b). Create seperate controller and rest method - 'sample-api'. 154-6.27 and make this method is calling some dummy rest url to make fails this ms.
+	c). Retry and fallBackMethod (retry response) - retry request call - can configure max attempts
+	    circuit breaker - open , closed and half open states
+            RateLmitor - in particular timeframe how many request you would want to allow.
+            BulkHeader - send bulk request
+
+<------------------------------------------------------------------------------------------------------------------------------------------->
+PART - 7 (videos from V1) - (Distibuted tracing with Zipkin and need of Spring cloud bus)
+-----------------------------
+1. add dependency for spring cloud slueth - this append unique id for all ms . so can use for trace our request
+2. 
+	a) download zipkin server jar and run via cmd
+	b) add two dependencies(zipkin and mq) in all ms and api-gateway. 
+	c) can check logs in zipkin dashboard
+
+

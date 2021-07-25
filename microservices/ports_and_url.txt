@@ -1,0 +1,22 @@
+Limits Service - http://localhost:8100/getLimits - 8100
+
+Currency Exchange - http://localhost:8200/currency-exchange/from/USD/to/INR - 8200,8201,8202..etc
+		  - H2 Database - http://localhost:8200/h2-console
+		  - circuit breaker - http://localhost:8200/sample-api	
+
+Currency Conversion - http://localhost:8300/currency-conversion-feign/from/AUD/to/INR/quantity/15 - 8300,8301,8302..etc
+
+
+
+Spring Cloud Config Server - http://localhost:8888/{application-name}/{profile} - ex(http://localhost:8888/limits-service/dev) - 8888
+
+Netflix Eureka Naming Server - http://localhost:8761/ - 8761
+
+API-Gateway - http://localhost:8765/{application-name-in-eureka-server}/{path of microservice}
+	Ex - http://localhost:8765/CURRENCY-EXCHANGE/currency-exchange/from/USD/to/INR
+
+using custom routing - the abouve url can be changed to -> http://localhost:8765/currency-exchange/from/USD/to/INR
+
+circuit breaker - http://localhost:8200/sample-api (implemented in currency-exchange ms)
+
+zipkin-server - http://localhost:9411/zipkin/ (using docker container)
