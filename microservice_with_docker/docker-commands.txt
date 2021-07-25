@@ -1,0 +1,86 @@
+1.command to run docker image with port - docker run -p 8200:8200 tamilm47/ms-currency-exchange-microservice:0.0.1-SNAPSHOT
+
+2.To stop the container - docker container stop <first_five_digits_container_id>
+
+3.to list all images present in machine - docker images
+
+4.run multiple containers in same image - docker run -p <another_port>:<container_port> -d <image_with_tag_version>
+  Example:
+  container 1 - docker run -p 5000:5000 -d hello-word:1.0.0.RELEASE
+  container 2 - docker run -p 5001:5000 -d hello-word:1.0.0.RELEASE
+
+5.to list all container which are running - docker container ls
+
+6.to list all containers which are running as well as Exited- docker container ls -a
+
+7.live logs for detached container- docker logs -f <container-id>
+
+8.command for getting log for detached container- docker logs <container-id>
+
+9.to run docker container as background -  docker run -p 8200:8200 -d tamilm47/ms-currency-exchange-microservice:0.0.1-SNAPSHOT
+
+<------------------------------------------------------------------------------------>
+Docker Image
+-----------------
+1.to remove image from local (not from repository) - docker image remove <image_id>
+
+2.to inspect image - docker image inspect image_id
+  so it returns the detailed image information in JSON format
+
+3.to see history of specific image - docker image history <image_id>
+
+4.search image - docker search <image_name>
+  Ex - docker search mysql
+
+5.docker pull repo_name   
+  here tag version not specified. so automatically pull latest version. But latest means always not the latest version of image.
+
+6.same image and multiple tags - docker tag <image:tag> <image:new_tag>
+
+<------------------------------------------------------------------------------------>
+Docker Containers
+-------------------
+1.add --restart=always in docker run command
+  two options for restart - always and no(default)
+
+  If we run with --restart=always  , 
+  once you restarted the docker desktop service , 
+  the that particular container which is marked with --restart=always in run command  it automatically start and run.
+
+2.docker container stop <container_id> - graceful shutdown
+
+3.docker container kill <container_id> - immediate shutdown
+
+4.to inspect container - docker container inspect <container_id>
+
+5.to pause container - docker container pause <5_digits_of_container_id>
+
+6.to un-pause container - docker container unpause <5_digits_of_container_id> .
+
+<------------------------------------------------------------------------------------>
+System related
+-------------------
+
+1.docker system df  - 
+  look at all the different things in docker daemon (docker engine) - it provides overall stats about images , containers , local volumes
+
+2.--cpu quota - same like memory we can allocate CPU quota
+
+docker run -p 5000:5000 -m 512m --cpu-quota -d <image_repository:tag_version>
+
+3.to assign a maximum memory for container.
+
+-m 512m - so it using maximum 512MB memory for this container.
+
+docker run -p 5000:5000 -m 512m -d <image_repository:tag_version>
+
+4.docker stats  - all the stats reg the containers (how much memory , cpu , blocks etc.. system metric information)
+
+5.docker top <container_id>  - is used to identify what is the top process running in specific container
+
+6.docker events  - to helps to track the events / activity in docker env
+<------------------------------------------------------------------------------------>
+To build docker image - right click project -> run as -> maven build -> in goal text box
+spring-boot:build-image -DskipTests
+
+
